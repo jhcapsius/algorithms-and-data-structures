@@ -2,6 +2,7 @@ import sys
 import csv
 from typing import IO
 
+
 class HashTable(object):
     #constructor
     def __init__(self, size):
@@ -10,161 +11,171 @@ class HashTable(object):
         #array for the keys
         self.slots = [None] * self.size
         #array for the values
-        self.data = [[] for i in range(self.size)] 
-        #packt den vornamen und die matrikelnummer in eine liste die in self.data abgelegt wird
-        self.datawrapper = []
+        self.data1 = [None] * self.size
+        self.data2 = [None] * self.size
 
-    #inserts data in the hashtable
+   #inserts data in the hashtable
     def put(self, key, data1, data2):
-        #the counter counts the number of failed attempts until a key/data pair has found a free slot.
+        #the counter is used to generate a hashvalue
         counter = 0
-        #remainder acts as hash value
+        #creates a hashvalue
         hashvalue = self.remainder(key, counter)
+
         #if a free space is found during the first attempt, the key/data pair is stored at this position
         if self.slots[hashvalue] == None:
             self.slots[hashvalue] = key
-            self.datawrapper = [data1, data2]
-            self.data[hashvalue].append(self.datawrapper)
-        #existiert der key bereits, werden die neuen daten drangehängt
+            self.data1[hashvalue] = data1
+            self.data2[hashvalue] = data2
+
+        #if the key already exists, the old data will be replaced with the new data
+        elif self.slots[hashvalue] == key:
+            self.data1[hashvalue] = data1
+            self.data2[hashvalue] = data2
         else:
-            if self.slots[hashvalue] == key:
-                self.datawrapper = [data1, data2]
-                self.data[hashvalue].append(self.datawrapper)
-            else:
-                #erhöht den counter um 1, da es der erste fehlversuch ist
                 counter += 1
-                #speichert den neuen rest der remainderfunktion in nextslot
+                
+                #creates a new hashvalue as long as self.slots[nextslot] is not none. if the next slot is none, the key/data pair is stored at this position
                 nextslot = self.remainder(hashvalue, counter)
-                #solange die stelle in slots[nextslot] ungleich None ist, y wird der counter um 1 erhöht und ein neuer restwert
-                # wird mit der remainderfunktion bestimmt 
                 while self.slots[nextslot] != None:
                     counter +=1
                     nextslot = self.remainder(nextslot, counter)
-                #ist der nächste verfügbare Slot None, wird das key/data paar an dieser stelle gespeichert    
                 if self.slots[nextslot] == None:
                     self.slots[nextslot] = key
-                    self.datawrapper = [data1, data2]
-                    self.data[nextslot].append(self.datawrapper)
-                #existiert der key bereits, werden die neuen daten drangehängt 
-                elif self.slots[nextslot] == key:
-                    self.datawrapper = [data1, data2]
-                    self.data[nextslot].append(self.datawrapper)
+                    self.data1[nextslot] = data1
+                    self.data2[nextslot] = data2
 
-    #gibt das ergebnis aus dem key-wert, der mit dem counter-wert i hoch 2 addiert wird, modulo die größe des hastable wieder
+    #used to generate a hash key with a given key and the counter
     def remainder(self, key, i):
-        #hashed_key = hash(key)
-        #erstellt beim ersten mal mit der myHashFunction einen hashed_key. ansonsten wird der restwert benutzt
         if i == 0:
             hashed_key = self.myHashFunction(key)
         else:
             hashed_key = key    
-            
-        return (hashed_key + round(pow(i/4,2))) % self.size     
+        return (hashed_key + round(pow(i/2,2))-1) % self.size     
 
-    #wandelt einen string in einen int um, der aus der summe der einzelnen buchstaben des strings besteht
+    #used to create a integer from the key
     def myHashFunction(self, key):
         result = 0
         string_to_char = []
         char_to_int = []
         string = key
-        #wandelt den string in chars um und speichert sie in einer liste
+
+        #converts the given string to chars and stores them in the array
         for x in range(len(string)):
             string_to_char.append(string[x])
-        #print(string_to_char)    
-        #wandelt die chars in ints um und speichert sie in einer liste
+         
+        #converts the given chars to integer and stores them in the array
         for y in range(len(string_to_char)):
             string2 = string_to_char[y]
             char_to_int.append(ord(string2))    
-        #print(char_to_int)    
-        #addiert die int-werte der chars auf
+        
+        #generates a hashvalue with the integer by add them
         for z in range(len(char_to_int)):
             result = result + char_to_int[z]        
-        #print(result)
-        #gibt das ergebnis aus den aufaddierten int-werte zurück
+       
+        #returns the hashvalue
         return result
 
-    def print(self):
-        print("Studentenliste")
-        #zählt anzahl der freien slots
-        counter = 0
-        for x in range(len(self.slots)):
-            if self.slots[x] is None:
-                counter += 1
-        print("Anzahl freier Keys: " + str(counter))
-        print()
-        #gibt die key und values aus            
-        for x in range(len(self.slots)):
-            if self.slots[x] is not None:
-                print("Nachname: ",self.slots[x])
-            for y in range(len(self.data[x])):
-                print(str(y+1) +".Eintrag: " + str(self.data[x][y]))      
-            
-
-    #löscht den eintrag
-    def deleteEntry(self, key):
-        #sucht nach dem key und löscht alle einträge des keys
-        for x in range(len(self.slots)):
-            if key == self.slots[x]:
-                self.slots[x] = None
-                self.data[x] = []
-                print("Eintrag wurde gelöscht")
-                print()
-   
-
-    def changeKey(self, old_key, new_key):
-        #sucht nach dem alten key und ersetzt ihn mit dem neuen
-        for x in range(len((self.slots))):
-            if old_key == self.slots[x]:
-                self.slots[x] = new_key 
-
-    #checkt ob es den gesuchten eintrag gibt
-    def keyCheck(self,key):
-        for x in range(len(self.slots)):
-            if key == self.slots[x]:
-                #gibt true zurück wenn der key gefunden wurde
-                return True
-        #gibt false zurück wenn der key nicht gefunden wurde        
-        return False   
-        
-    #fragt ab ob die liste voll ist
+    #checks if the list is full
     def is_full(self):
         items = 0
-        #zählt für jeden nicht leeren platz +1 hoch
+        
+        #counts +1 for every not none index in the list
         for item in self.slots:
             if item is not None:
                 items += 1
-        #gibt zurück ob die anzahl der einträge = größe der hastable ist n (true/false)
+        #returns if amount of items equals to the size of the array        
         return items == self.size
 
-    #gibt die values eines keys wieder
-    def getEntryData(self, key):
-        data = []
-        for x in range(len(self.slots)):
-            if key == self.slots[x]:
-                for y in range(len(self.data[x])):
-                    data.append(self.data[x][y])
-        return data
+    #checkt ob die matrikelnummer enthalten ist
+    def checkMNumber(self, m_number):
+        for x in range(len(self.data2)):
+            if m_number == self.data2[x]:
+                return True
+            else:
+                return False
     
-    #gibt die keys wieder
-    def getKeys(self):
-        keys = []
-        for x in range(len(self.slots)):
-            if self.slots[x] is not None:
-                keys.append(self.slots[x])
-        return keys    
+    #checks if the matriculation number is included
+    def entryCheck(self,name, m_number):
+        bool1 = False
+        bool2 = False
+        for x in range(len(self.data2)):
+            if name == self.slots[x]:
+                bool1 = True
+            if m_number == self.data2[x]:
+                bool2 = True
+        if bool1 and bool2:
+            return True        
+        else:
+            return False       
     
-#beendet das programm                
+    #deletes entries
+    def deleteEntry(self, key, data2):
+        #checks if the entry exists, if it doesn't the function exits and returns false
+        if self.entryCheck(key, data2) is False:
+            return False
+            
+        
+        #If there is an entry, it is iterated until it is found and the entry is resetted.    
+        else:
+            counter = 0
+            run = True
+            hashvalue = self.remainder(key, counter)
+            while run:
+                if self.slots[hashvalue] == key and self.data2[hashvalue] == data2:
+                    self.slots[hashvalue] = None
+                    self.data1[hashvalue] = None
+                    self.data2[hashvalue] = None
+                    run = False    
+                    return True
+                else:
+                    counter += 1
+                    hashvalue = self.remainder(hashvalue, counter)
+
+    #returns the first name
+    def getEntryData1(self, key, data2):
+        for x in range(len(self.data1)):
+            if key == self.slots[x] and data2 == self.data2[x]:
+                return self.data1[x]
+
+    #returns the name at index i
+    def getData1(self, i):
+        return self.data1[i]
+
+    #returns the matriculation number at index i
+    def getData2(self, i):
+        return self.data2[i] 
+
+    #returns the key at index i
+    def getSlots(self, i):
+        return self.slots[i]
+              
+
+#ends the program                
 def endProgram():
     print("Das Programm wird beendet.")
     sys.exit()
 
-#listen
+#prints the hashtable
+def printTable(hashTable, len):
+    counter = 0
+    for x in range(len):
+        if hashTable.getSlots(x) is None:
+            counter += 1
+    print("Hashtable: ", len, " Slots")
+    print("Freie Plätze:", counter)
+    print()
+    for x in range(len):
+        if hashTable.getSlots(x) is not None:
+            print("Key(Nachname): ",hashTable.getSlots(x))
+            print("Data1(Vorname): ",hashTable.getData1(x))
+            print("Data2(Matrikelnummer): ", hashTable.getData2(x))
+            print()
+
+#reads a dokument and store there information in the hashtable
 name = []
 firstname = []
 number = []
-#speichert file name    
 file = "studentdata2.csv"
-#versuchte die file zu öffnen und liest die namen, vornamen und matrikelnummern in die oben definierte listen ein
 try:
     with open(file) as csv_file:
         csv_reader = csv.DictReader(csv_file)
@@ -172,25 +183,19 @@ try:
             name.append(columns["Name"])
             firstname.append(columns["Vorname"])
             number.append(columns["Matrikelnummer"])
-#Sollte die file nicht gefunden werden, startet man mit einer leeren hashtable            
 except(IOError):
     print("File not found")
-    
-#hashtable object mit größe myhashtablelength wird erstellt
-myHashTableLength = len(name)+20
+myHashTableLength = len(name)+1
 myHashTable = HashTable(myHashTableLength)
-
-#füllt die hashtable mit den daten aus dem dokument
 for i in range(len(name)):
-    #print(i)
-    keys = name[i]
-    #print(key_string)
-    names = firstname[i]
-    numbers = number[i]
-    myHashTable.put(keys, names, numbers)
+    key_string = name[i]
+    data_list1 = firstname[i]
+    data_list2 = number[i]
+    myHashTable.put(key_string, data_list1, data_list2)
 
+
+#menuinterface to use the hashtable
 while True:
-    #menüinterface
     print("Menü")
     print("[A] Hashtable anzeigen")
     print("[L] Eintrag löschen")
@@ -198,89 +203,73 @@ while True:
     print("[N] Nachname aendern")
     print("[E] Speichern und verlassen")
     print()
-    #eingabe der Optionen
     menue_option = str(input()).upper()
     print()
 
-    #gibt eingabe = a oder A die hashtable aus
+ 
     if(menue_option == "A"):
-        myHashTable.print()
+        printTable(myHashTable, myHashTableLength)
         print()
 
-    #löscht bei eingabe = l oder L einen Eintrag   
+    
     elif(menue_option == "L"):
-        #gibt die hashtable aus, damit man sehen kann welche einträge gelöscht werden können
-        myHashTable.print()
-        print()
-        #speichert den namen und die matrikelnummer des studenten, dessen eintrag gelöscht werden soll
-        key_string = input("Bitte geben sie den Nachnamen der Person, die sie löschen wollen, ein: ")
-        #checkt ob die person teil der liste ist und löscht sie wenn vorhanden  
-        myHashTable.deleteEntry(key_string)
+        printTable(myHashTable, myHashTableLength)
+        key_string = input("Bitte geben sie die Namen der Person, die sie löschen wollen, ein: ")
+        data_string = input("Bitte geben sie die Matrikelnummer der Person, die sie löschen wollen, ein: ")
+        if myHashTable.deleteEntry(key_string, data_string):
+           print("Der Student wurde aus dem Verzeichnis gelöscht.")
+           print()
+        else:
+            print("Eintrag nicht gefunden")
+            print()
 
-    #fügt neue einträge hinzu
+    
     elif(menue_option == "H"):
-        #eingabe von nachname, vorname und matrikelnummer  
-        key_string = str(input("Bitte geben sie einen Nachnamen ein: "))
-        data_list = str(input("Bitte geben sie einen Vornamen ein: "))
-        data_list2 = str(input("Bitte geben sie eine Matrikelnummer ein: "))
-        #checkt ob die liste voll ist. wenn ja können keine weiteren einträge gemacht werden
-        
         if myHashTable.is_full():
             print("Hashtable ist voll! Es können keine weiteren Studenten hinzugefügt werden.")
-            print()       
-        else:
-            myHashTable.put(key_string, data_list, data_list2)
-            print("Der Student wurde der Liste hinzugefügt")        
-        print()
-
-    #ändert vorhandenen nachnamen    
-    elif(menue_option == "N"):
-        #myHashTable.print2()
-        #eingabe von nachname und matrikelnummer
-        old_key = str(input("Bitte geben sie den Nachnamen der Person, dessen Nachnamen sie ändern wollen, ein: "))
-        #checkt ob es den gesuchten eintrag gibt und weist data den vornamen zu
-        if myHashTable.keyCheck(old_key):
-            new_key = str(input("Bitte geben sie den neuen Nachnamen ein: "))
-            myHashTable.changeKey(old_key, new_key)
-            print("Nachname wurde geändert")
             print()
         else:
-            print("Der zu änderne Nachname wurde nicht gefunden")
+            key_string = str(input("Bitte geben sie einen Nachnamen ein: "))
+            data_list = str(input("Bitte geben sie einen Vornamen ein: "))
+            data_list2 = str(input("Bitte geben sie eine Matrikelnummer ein: "))
+            if myHashTable.checkMNumber(data_list2):
+                print("Matrikelnummer bereits vergeben")
+            else:
+                myHashTable.put(key_string, data_list, data_list2)        
+        print()
+
+    elif(menue_option == "N"):
+        key_string = str(input("Bitte geben sie den Nachnamen der Person, dessen Nachnamen sie ändern wollen, ein: "))
+        data_string = str(input("Bitte geben sie die Matrikelnummer der Person, dessen Nachnamen sie ändern wollen, ein: "))
+        data = 0
+        if myHashTable.entryCheck(key_string, data_string):
+            data = myHashTable.getEntryData1(key_string, data_string) 
+        if myHashTable.deleteEntry(key_string, data_string):
+            key_string2 = str(input("Bitte geben sie den neuen Nachnamen ein: "))
+            myHashTable.put(key_string2, data, data_string)
+            print()
+        else:
+            print("Eintrag nicht gefunden")
             print()   
 
     elif (menue_option == "E"):
-        #liest die keys und values in listen ein
-        keys = myHashTable.getKeys()
-        data = []
-        for x in range(len(keys)):
-            data.append(myHashTable.getEntryData(keys[x]))  
-        names = []
-        matriculation_numbers = []
-        for x in range(len(data)):
-            for y in range(len(data[x])):
-                for z in range(len(data[x][y])):
-                    if z == 0:
-                        names.append(data[x][y][z])
-                    else:
-                        matriculation_numbers.append(data[x][y][z])      
-        #gibt an in welcher file es gespeichert wird
-        file = "studentdata3.csv"
-        #versucht die file zu öffnen und die überschriften und werte der pairs zeilenweise in die zieldatei zu schreiben und beendet danach das programm
+        file = "studentdata5.csv"
         try:
             with open(file, mode = "w") as csv_file:
                 fieldnames = ["Name", "Vorname","Matrikelnummer"]
                 csv_writer = csv.DictWriter(csv_file, fieldnames = fieldnames)
                 csv_writer.writeheader()
-                for x in range(len(keys)):
-                    lastname = keys[x]
-                    name = names[x]
-                    matriculation_number = matriculation_numbers[x]
-                    csv_writer.writerow({"Name": lastname, "Vorname": name, "Matrikelnummer": matriculation_number})
+                for x in range(myHashTableLength):
+                    nameString = myHashTable.getSlots(x)
+                    dataString = myHashTable.getData1(x)
+                    dataString2 = myHashTable.getData2(x)
+                    csv_writer.writerow({"Name": nameString, "Vorname": dataString, "Matrikelnummer": dataString2})
                 endProgram()
-        #sollte die zieldatei nicht gefunden werden, wird das programm geschlossen 
         except(IOError):
             print("File not found")
-            endProgram()
+            endProgram()  
+
     else:
         print("Ungültige Eingabe")
-        print()        
+        print()
+
