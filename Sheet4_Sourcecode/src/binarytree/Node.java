@@ -1,5 +1,5 @@
 /**
- * Classe to create a node
+ * Class to create a node
  * @author Jan-Henrik Capsius
  * @version 1.1
  */

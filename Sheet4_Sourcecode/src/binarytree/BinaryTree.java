@@ -1,5 +1,5 @@
 /**
- * Classe thats implemtention the functions of a binary tree
+ * Class thats implemtention the functions of a binary tree
  * @author Jan-Henrik Capsius
  * @version 1.1
  */
