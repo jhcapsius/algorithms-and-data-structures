@@ -1,7 +1,7 @@
 /**
  * Classe to create a node
  * @author Jan-Henrik Capsius
- * @version 1.0
+ * @version 1.1
  */
 
 package src.binarytree;
@@ -17,7 +17,26 @@ public class Node <T> {
      */
     Node(T data){
         this.data = data;
+        this.left_child = null;
+        this.right_child = null;
     }
+
+    public Node<T> getleft_child(){
+        return this.left_child;
+    }
+
+    public void setleft_child(Node<T> node){
+        this.left_child = node;
+    }
+    
+    public Node<T> getright_child(){
+        return this.right_child;
+    }
+
+    public void setright_child(Node<T> node){
+        this.right_child = node;
+    }
+
 
     /**
      * getter for data
