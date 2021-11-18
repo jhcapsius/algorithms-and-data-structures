@@ -1,5 +1,5 @@
 /**
- * Class thats implemtention the functions of a binary tree
+ * This class acts as binery tree
  * @author Jan-Henrik Capsius
  * @version 1.1
  */
@@ -35,7 +35,7 @@ public class BinaryTree<T extends Comparable<T>> {
             current.setright_child(add(current.getright_child(), data));
         }else{
             //current.left_child = add(current.left_child, data);
-            current.setleft_child(add(current.getright_child(), data));
+            current.setleft_child(add(current.getleft_child(), data));
         }
         return current;
     }
@@ -64,7 +64,7 @@ public class BinaryTree<T extends Comparable<T>> {
         }
 
         //checks left side when the data is smaller than the data of the current node and checks right side when the data is bigger than the data of the current node
-        return data.compareTo(current.getData()) < 0 ? containsNode(current.left_child, data) : containsNode(current.right_child, data);
+        return data.compareTo(current.getData()) < 0 ? containsNode(current.getleft_child(), data) : containsNode(current.getright_child(), data);
     }
 
     /**
@@ -73,7 +73,7 @@ public class BinaryTree<T extends Comparable<T>> {
      * @return smallest generic value
      */
     private T findSmallestData(Node<T> current){
-        return current.left_child.getData() == null ? current.getData() : findSmallestData(current.left_child); 
+        return current.getleft_child() == null ? current.getData() : findSmallestData(current.getleft_child()); 
     }
 
      /**
@@ -96,29 +96,29 @@ public class BinaryTree<T extends Comparable<T>> {
         }
 
         if(data.compareTo(current.getData()) == 0){
-            if(current.left_child == null && current.right_child == null){
+            if(current.getleft_child() == null && current.getright_child() == null){
                 return null;
             }
 
-            else if(current.right_child == null){
-                return current.left_child;
+            else if(current.getright_child() == null){
+                return current.getleft_child();
             }
 
-            else if(current.left_child == null){
-                return current.right_child;
+            else if(current.getleft_child() == null){
+                return current.getright_child();
             }
 
-            T smallestData = findSmallestData(current.right_child);
+            T smallestData = findSmallestData(current.getright_child());
             current.setData(smallestData);
-            current.right_child = deleteNode(current.right_child, smallestData);
+            current.setright_child(deleteNode(current.getright_child(), smallestData));
             return current;
         }
 
         if(data.compareTo(current.getData()) < 0){
-            current.left_child = deleteNode(current.left_child, data);
+            current.setleft_child(deleteNode(current.getleft_child(), data));
             return current;
         }else{
-            current.right_child = deleteNode(current.right_child, data);
+            current.setright_child(deleteNode(current.getright_child(), data));
             return current;
         }
     }
@@ -128,7 +128,7 @@ public class BinaryTree<T extends Comparable<T>> {
      * Starts the deletion process
      * @param value integer value that we want to delete
      */
-    public void depth() {
+    private void depth() {
         depth(this.root, 0);
     }
 
@@ -138,7 +138,7 @@ public class BinaryTree<T extends Comparable<T>> {
      * @param node starts with the root node
      * @param depth starts with 0
      */
-    public void depth(Node<T> node, int depth) {
+    private void depth(Node<T> node, int depth) {
         if (node != null) {
             node.setDepth(depth);
             depth(node.getleft_child(), depth + 1);
@@ -151,7 +151,7 @@ public class BinaryTree<T extends Comparable<T>> {
      * @return true if the tree is empty and false if it is not empty
      */
     public boolean is_empty() {
-        if(this.root.getData() == null){
+        if(this.root == null){
             return true;
         }else {
             return false;
@@ -162,12 +162,13 @@ public class BinaryTree<T extends Comparable<T>> {
       * get root
       * @return root
       */
-     public Node<T> getRoot() {
-         return this.root;
+     public T getRoot() {
+         return this.root.getData();
      }
 
     public void traversePreOrder(){
         traversePreOrder(this.root);
+        System.out.println();
     }
 
     /**
@@ -183,7 +184,9 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public void traversePreOrderDetails(){
+        depth();
         traversePreOrderDetails(this.root);
+        System.out.println();
     }
 
     /**
@@ -193,7 +196,7 @@ public class BinaryTree<T extends Comparable<T>> {
     private void traversePreOrderDetails(Node<T> node) {
         if (node != null && node.getleft_child() != null && node.getright_child() != null) {
             System.out.print(node.getData() + "(d:" + node.getDepth() + "):" + node.getleft_child().getData() + "(d:" + node.getleft_child().getDepth() + ")," 
-            + node.getright_child().getDepth() + "(d:" + node.getright_child().getDepth() + ")\n");
+            + node.getright_child().getData() + "(d:" + node.getright_child().getDepth() + ")\n");
             traversePreOrderDetails(node.getleft_child());
             traversePreOrderDetails(node.getright_child());
         } else if (node != null && node.getleft_child() == null && node.getright_child() == null) {
@@ -212,6 +215,7 @@ public class BinaryTree<T extends Comparable<T>> {
 
     public void traverseInOrder(){
         traverseInOrder(this.root);
+        System.out.println();
     }
 
     /**
@@ -227,7 +231,9 @@ public class BinaryTree<T extends Comparable<T>> {
     }
 
     public void traverseInOrderDetails(){
+        depth();
         traverseInOrderDetails(this.root);
+        System.out.println();
     }
 
     /**
@@ -235,24 +241,63 @@ public class BinaryTree<T extends Comparable<T>> {
      * @param node startnode is root
      */
     private void traverseInOrderDetails(Node<T> node) {
+        
         if (node != null && node.getleft_child() != null && node.getright_child() != null) {
-            traverseInOrder(node.getright_child());
-            System.out.print(node.getData() + "(d:" + node.getDepth() + "):" + node.getleft_child().getData() + "(d:" + node.getleft_child().getDepth() + ")," 
-                + node.getright_child().getData() + "(d:" + node.getright_child().getDepth() + ")\n");
-            traverseInOrderDetails(node.getright_child());
-        }
-        if (node != null && node.getleft_child() == null && node.getright_child() == null) {
-            System.out.print(node.getData() + "(d:" + node.getDepth() + "):" + null + "(d:" + (node.getDepth() + 1) + ")," + null + "(d:" + (node.getDepth() + 1) + ")\n");
-        }
-        if (node != null && node.getleft_child() != null && node.getright_child() == null) {
             traverseInOrderDetails(node.getleft_child());
-            System.out.print(node.getData() + "(d:" + node.getDepth() + "):" + node.getleft_child().getData() + "(d:" + node.right_child.getDepth() + ")," + null + 
-            "(d:" + (node.getDepth() + 1) + ")\n");
-        }
-        if (node != null && node.getleft_child() == null && node.getright_child() != null) {
-            System.out.print(node.getData() + "(d:" + node.getDepth() + "):" + null + "(h:" + (node.getDepth() + 1) + ")," + node.getright_child().getData()+ 
-            "(d:" + (node.getleft_child().getDepth()) + ")\n");
+            System.out.print(node.getData() + "(d:" + node.getDepth() + "):" + node.getleft_child().getData() + "(d:" + node.getleft_child().getDepth() + ")," + node.getright_child().getData() +
+                    "(h:" + node.getright_child().getData() + ")\n");
+            traverseInOrderDetails(node.getright_child());
+
+        }else if(node != null && node.getleft_child() == null &&node.getright_child() == null){
+            System.out.print(node.getData() + "(h:" + node.getDepth() + "):" + null + "(h:" + (node.getDepth() + 1) + ")," + null + "(h:" + (node.getDepth() + 1) + ")\n");
+        
+        }else if (node != null && node.getleft_child() != null && node.getright_child() == null) {
+            traverseInOrderDetails(node.getleft_child());
+            System.out.print(node.getData() + "(h:" + node.getDepth() + "):" + node.getleft_child().getData() + "(h:" + node.getleft_child().getDepth() + ")," + null + "(h:" + (node.getDepth() + 1) + ")\n");
+
+        }else if(node != null && node.getleft_child() == null && node.getright_child() != null){
+            System.out.print(node.getData() + "(h:" + node.getDepth() + "):" + null + "(h:" + (node.getDepth() + 1) + ")," + node.getright_child().getData()+ "(h:" + (node.getright_child().getDepth()) + ")\n");
             traverseInOrderDetails(node.getright_child());
         }
     }
+
+    public void printLeftSubtree(){
+        printLeftSubtree(this.root.getleft_child());
+    }
+
+    private void printLeftSubtree(Node<T> node){
+        if(node != null){
+            System.out.print(node.getData() + " ");
+            traversePreOrder(node.getleft_child());
+            traversePreOrder(node.getright_child());
+        }
+
+    }
+
+    public void printRightSubtree(){
+        printRightSubtree(this.root.getright_child());
+    }
+
+    private void printRightSubtree(Node<T> node){
+        if (node != null){
+            System.out.print(node.getData() + " ");
+            traversePreOrder(node.getleft_child());
+            traversePreOrder(node.getright_child());
+        }
+    }
+
+    public BinaryTree<Integer> testBinaryTree(){
+        BinaryTree<Integer> testBinaryTree = new BinaryTree<>();
+        testBinaryTree.add(6);
+        testBinaryTree.add(4);
+        testBinaryTree.add(8);
+        testBinaryTree.add(3);
+        testBinaryTree.add(5);
+        testBinaryTree.add(7);
+        testBinaryTree.add(9);
+        testBinaryTree.add(1);
+        testBinaryTree.add(2);
+        return testBinaryTree;
+    }
+
 }
