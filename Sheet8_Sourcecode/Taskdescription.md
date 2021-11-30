@@ -10,4 +10,4 @@ e : Inserting an element into the heap<br>
 l : delete the smallest element from the heap<br>
 s : sorted output of the heap (= perform HeapSort)<br>
 a : Output of the array<br>
-n : re-reading of the data<br>
+n : reading of the data<br>
