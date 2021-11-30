@@ -5,10 +5,10 @@ Implement the two knapsack algorithms from the lecture in Java and in Python. Me
 how often the inner loop is run. Record your results in a table. Take the input data from the lecture and create a second data set with 20 items as input.
 
 ### First Algorithm
-![alt text](https://gyazo.com/9c57378d2e520c4a08c9f5191777e106)
+![alt text](https://i.gyazo.com/9c57378d2e520c4a08c9f5191777e106.png)
 
 ### Second Algorithm
-![alt text]https://gyazo.com/f2814c921c44e1f8f14bc18a6c0e8e81)
+![alt text]https://i.gyazo.com/f2814c921c44e1f8f14bc18a6c0e8e81.png)
   
 _________________________________________________________________________________________________________________________
   
