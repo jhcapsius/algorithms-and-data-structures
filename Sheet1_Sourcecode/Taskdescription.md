@@ -14,7 +14,7 @@ maximum partial sum
 the number of additions  
 the required time  
 
-![alt text](https://gyazo.com/ae4d9445b409156f563c8b6cbead8eaf)
+![alt text](https://i.gyazo.com/ae4d9445b409156f563c8b6cbead8eaf.png)
 
 _________________________________________________________________________________________________________________________
   
