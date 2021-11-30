@@ -8,7 +8,7 @@ how often the inner loop is run. Record your results in a table. Take the input 
 ![alt text](https://i.gyazo.com/9c57378d2e520c4a08c9f5191777e106.png)
 
 ### Second Algorithm
-![alt text]https://i.gyazo.com/f2814c921c44e1f8f14bc18a6c0e8e81.png)
+![alt text](https://i.gyazo.com/f2814c921c44e1f8f14bc18a6c0e8e81.png)
   
 _________________________________________________________________________________________________________________________
   
