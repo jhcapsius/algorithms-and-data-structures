@@ -6,8 +6,8 @@ Develop an algorithm that inserts an element into an existing heap that is in an
 Now implement a program that reads an unsorted sequence of numbers from a file and inserts it into an array. Then establish the heap property (smallest element in front) and output the array. 
 In a menu, the user should then have the following have the following choices in a menu:
 
-e : Inserting an element into the heap
-l : delete the smallest element from the heap
-s : sorted output of the heap (= perform HeapSort)
-a : Output of the array
-n : re-reading of the data
+e : Inserting an element into the heap<br>
+l : delete the smallest element from the heap<br>
+s : sorted output of the heap (= perform HeapSort)<br>
+a : Output of the array<br>
+n : re-reading of the data<br>
