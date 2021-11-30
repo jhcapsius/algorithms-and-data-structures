@@ -7,20 +7,20 @@ Work with JUnit and JavaDoc from now on.
 
 Implement generically in Java the elementary operations on binary trees mentioned in lecture 5.
 
-Operations:
-(Tree = Treetyp, T = Nodetype)
-bin : Tree × T × Tree → T ee
-lef t : Tree → Tree
-right : Tree → Tree
-value : Tree → T
-is_empty : Tree → Boolean
+Operations:<br>
+(Tree = Treetyp, T = Nodetype)<br>
+bin : Tree × T × Tree → Tree<br>
+lef t : Tree → Tree<br>
+right : Tree → Tree<br>
+value : Tree → T<br>
+is_empty : Tree → Boolean<br>
 
-axioms
-(∀x, y : Tree; ∀b : T) left(bin(x, b, y)) = x
-right(bin(x, b, y)) = y
-value(bin(x, b, y)) = b
-is_empty(empty) = true
-is_empty(bin(x, b, y)) = false
+axioms<br>
+(∀x, y : Tree; ∀b : T) left(bin(x, b, y)) = x<br>
+right(bin(x, b, y)) = y<br>
+value(bin(x, b, y)) = b<br>
+is_empty(empty) = true<br>
+is_empty(bin(x, b, y)) = false<br>
 
 _________________________________________________________________________________________________________________________
   
